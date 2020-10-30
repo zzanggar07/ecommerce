@@ -1,0 +1,24 @@
+{
+  "extends": [
+    "tslint:recommended",
+    //    "tslint-microsoft-contrib",
+    //    "tslint-consistent-codestyle",
+    "tslint-react",
+    "tslint-eslint-rules",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "ordered-imports": [false],
+    "object-literal-sort-keys": [false],
+    "no-implicit-dependencies": false,
+    "no-submodule-imports": false,
+    "no-console": false,
+    "no-string-literal": false,
+    "prefer-object-spread": false,
+    "only-arrow-functions": false,
+    "no-relative-imports": true,
+    "jsx-no-lambda": false,
+    "jsx-self-close": false,
+    "jsx-no-string-ref": false
+  }
+}
