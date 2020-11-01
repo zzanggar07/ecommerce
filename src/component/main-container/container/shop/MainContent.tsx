@@ -5,7 +5,7 @@ import Toast from '@utils/Toast'
 
 @inject((stores: any) => {
    return {
-      products: stores.staticRes.product.list,
+      products: stores.shop.product.list,
       cart: stores.cart.list,
    }
 })
@@ -18,7 +18,7 @@ export default class MainContent extends React.Component<any, {}> {
       const products = this.props.products;
       products.getList().then((r: any) => {
          products.sortByPrice().then((a: any) => {
-            console.log(a)
+            console.log("load product"+a)
          })
       })
    }

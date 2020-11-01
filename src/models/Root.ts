@@ -4,7 +4,7 @@ import { APIRootModel } from './api'
 import { HomeRootModel } from './service/home'
 import { LearningRootModel } from './service/learning'
 import { ManagerRootModel } from './service/manager'
-import { StaticResRootModel } from './resource'
+import { ShopResRootModel } from './resource'
 import { CartRootModel } from './service/cart'
 
 const Root = {
@@ -14,7 +14,7 @@ const Root = {
    home: HomeRootModel,
    learning: LearningRootModel,
    manager: ManagerRootModel,
-   staticRes: StaticResRootModel,
+   shop: ShopResRootModel,
    cart : CartRootModel
 }
 

@@ -6,11 +6,18 @@ import { numberWithComma } from '@utils/Utility'
 @inject((stores: any) => {
    return {
       cart: stores.cart.list,
+      coupons: stores.shop.coupon.list,
    }
 })
 
 @observer
 export default class MainContent extends React.Component<any, {}> {
+   componentDidMount() {
+      this.props.coupons.getList().then((r: any) => {
+         console.log("load coupons="+r)
+      })
+   }
+
    render() {
       return <React.Fragment>
          <main>
@@ -94,7 +101,7 @@ export default class MainContent extends React.Component<any, {}> {
                                     )
                                  })
                               }
-                              
+
                               <tr className="coupon_area">
                                  <td />
                                  <td />
@@ -105,22 +112,16 @@ export default class MainContent extends React.Component<any, {}> {
                                  <td>
                                     <div className="coupon_box">
                                        <ul className="list">
-                                          <li>
-                                             Flat Rate: $5.00
-                                             <input type="radio" aria-label="Radio button for following text input" />
-                                          </li>
-                                          <li>
-                                             Free Shipping
-                                             <input type="radio" aria-label="Radio button for following text input" />
-                                          </li>
-                                          <li>
-                                             Flat Rate: $10.00
-                                             <input type="radio" aria-label="Radio button for following text input" />
-                                          </li>
-                                          <li className="active">
-                                             Local Delivery: $2.00
-                                             <input type="radio" aria-label="Radio button for following text input" />
-                                          </li>
+                                          {
+                                             this.props.coupons.result.items.map((item: any) => {
+                                                return (
+                                                   <li key={item.type}>
+                                                      {item.title }
+                                                      <input type="radio" aria-label="Radio button for following text input" />
+                                                   </li>
+                                                )
+                                             })
+                                          }
                                        </ul>
                                     </div>
                                  </td>

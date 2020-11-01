@@ -1,5 +1,5 @@
-// import { List } from './List'
+import { List } from './response/List'
 
 export const CouponRootModel = {
- //  list: List,
+ list: List,
 }
