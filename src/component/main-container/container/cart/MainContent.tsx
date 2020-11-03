@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { inject, observer } from 'mobx-react'
 import { numberWithComma } from '@utils/Utility'
-import { COUPON_TYPE_RATE } from '@src/Constants'
 
 @inject((stores: any) => {
    return {
