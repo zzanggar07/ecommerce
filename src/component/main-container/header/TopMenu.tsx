@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { inject, observer } from 'mobx-react'
+import { isEmpty } from '@utils/Utility'
 
 import { MAIN_MENU_PROPS, MAIN_MENU } from '@src/Constants'
 
@@ -85,7 +86,7 @@ export default class TopMenu extends React.Component<any, {}> {
                               <li>
                                  <Link to="/cart"><span className="flaticon-shopping-cart" style={{
                                     color: pathname === MAIN_MENU_PROPS.get(MAIN_MENU.CART).pathName ? "red" : "#752626"
-                                 }}><span style={{ fontSize: "12px", paddingLeft: "3px" }}>[ {this.props.cart.result.items.length} ]</span></span></Link>
+                                 }}><span style={{ fontSize: "12px", paddingLeft: "3px" }}>[ {isEmpty(this.props.cart.result.items)} ]</span></span></Link>
                               </li>
                            </ul>
                         </div>
