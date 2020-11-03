@@ -5,7 +5,8 @@ export const Product = types.model({
    title: types.string,
    coverImage: types.string,
    price: types.number,
-   score: types.number
+   score: types.number,
+   availableCoupon: types.boolean
 })
 
 export const ProductResData = types.model({

@@ -14,7 +14,7 @@ import { numberWithComma } from '@utils/Utility'
 export default class MainContent extends React.Component<any, {}> {
    componentDidMount() {
       this.props.coupons.getList().then((r: any) => {
-         console.log("load coupons="+r)
+         console.log("load coupons=" + r)
       })
    }
 
@@ -59,7 +59,10 @@ export default class MainContent extends React.Component<any, {}> {
                                           <td>
                                              <div className="check_box">
                                                 <label className="checkbox-wrap checkbox-primary">
-                                                   <input type="checkbox" />
+                                                   <input type="checkbox" checked={item.isChecked}
+                                                      onClick={(e) => {
+                                                         this.props.cart.toggleToBuyProduct(item).then((r: any) => { console.log(r) })
+                                                      }} />
                                                    <span className="checkmark"></span>
                                                 </label>
                                              </div>
@@ -79,9 +82,15 @@ export default class MainContent extends React.Component<any, {}> {
                                           </td>
                                           <td>
                                              <div className="product_count">
-                                                <span className="input-number-decrement"> <i className="ti-minus" /></span>
-                                                <input className="input-number" type="text" defaultValue={item.count} min={1} max={10} />
-                                                <span className="input-number-increment"> <i className="ti-plus" /></span>
+                                                <span className="input-number-decrement"
+                                                   onClick={(e) => {
+                                                      this.props.cart.decreaseCountOfProduct(item).then((r: any) => { console.log(r) })
+                                                   }}><i className="ti-minus" /></span>
+                                                <input className="input-number" type="text" defaultValue={item.count} value={item.count} min={1} max={10} />
+                                                <span className="input-number-increment"
+                                                   onClick={(e) => {
+                                                      this.props.cart.increaseCountOfProduct(item).then((r: any) => { console.log(r) })
+                                                   }}><i className="ti-plus" /></span>
                                              </div>
                                           </td>
                                           <td>
@@ -116,7 +125,7 @@ export default class MainContent extends React.Component<any, {}> {
                                              this.props.coupons.result.items.map((item: any) => {
                                                 return (
                                                    <li key={item.type}>
-                                                      {item.title }
+                                                      {item.title}
                                                       <input type="radio" aria-label="Radio button for following text input" />
                                                    </li>
                                                 )
@@ -128,14 +137,14 @@ export default class MainContent extends React.Component<any, {}> {
                                  <td />
                               </tr>
                               <tr>
-                                 <td />
-                                 <td />
-                                 <td />
-                                 <td>
-                                    <h5>Subtotal</h5>
-                                 </td>
-                                 <td>
-                                    <h5>$2160.00</h5>
+                                 <td colSpan={4} style={{ textAlign: "right" }}>
+                                    <h5>총상품 가격:
+                                       {
+                                          numberWithComma(
+                                             this.props.cart.result.items.filter((d: any) => d.isChecked).reduce((p: any, n: any) => {
+                                                return p + n.price * n.count;
+                                             }, 0))
+                                       }원 - 총할인 가격:{} = 총 주문 가격:{}</h5>
                                  </td>
                                  <td />
                               </tr>

@@ -7721,7 +7721,7 @@ input:focus {
 .cart_area .product_count .input-number-decrement {
     position: absolute;
     right: 0;
-    bottom: -9px;
+    bottom: -16px;
     padding: 10px;
     border-left: 1px solid #ddd;
     display: inline-block;

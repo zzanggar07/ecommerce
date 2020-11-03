@@ -19,7 +19,8 @@ export const List = types
                   title: product.title,
                   coverImage: product.coverImage,
                   price: product.price,
-                  score: product.score
+                  score: product.score,
+                  availableCoupon: product.availableCoupon ? product.availableCoupon : true
                }),
             ),
          }

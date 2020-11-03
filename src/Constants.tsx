@@ -579,6 +579,8 @@ export const ERROR_PROPS = new Map()
         score: 220,
       }
     ];
-   
+    export const COUPON_TYPE_RATE = "rate"
+    export const COUPON_TYPE_AMOUNT= "amount"
+
     export const SORT_BY_PRICE = 1
     export const SORT_BY_SCORE = 2

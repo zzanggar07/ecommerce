@@ -5,7 +5,8 @@ export const CartItem = types.model({
    title: types.string,
    coverImage: types.string,
    price: types.number,
-   count: types.number
+   count: types.number,
+   isChecked: types.boolean
 })
 
 export const CartResData = types.model({
