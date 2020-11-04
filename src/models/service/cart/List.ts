@@ -15,8 +15,11 @@ export const List = types
    .views((self) => ({
       get subTotal() {
          return self.result.items ? self.result.items.filter((d: any) => d.isChecked).reduce((p: any, n: any) => {
-            return p + n.price * n.count;
+            return p + n.product.price * n.quantity;
          }, 0) : 0
+      },
+      get count() {
+         return self.result.items ? self.result.items.length : 0
       },
       get totalDiscount() {
          return self.result.coupons ? self.result.coupons.filter((d: any) => d.isChecked).reduce((p: any, n: any) => {
@@ -26,11 +29,33 @@ export const List = types
             }
             return discount;
          }, "없음") : "쿠폰없음"
-
       },
-      //   get total() {
-      //       return self.subTotal - self.discount
-      //   },
+      get total() {
+         let total = 0;
+         let discount = 0;
+         if (self.result.items) {
+            const availableCouponPrice = self.result.items.filter((d: any) => d.isChecked).filter((d: any) => d.product.availableCoupon).reduce((p: any, n: any) => {
+               return p + n.product.price * n.quantity;
+            }, 0)
+
+            if (self.result.coupons) {
+               self.result.coupons.filter((d: any) => d.isChecked).forEach(coupon => {
+                  if (coupon.type === COUPON_TYPE_RATE) {
+                     discount += (availableCouponPrice * coupon.discount / 100);
+                  } else {
+                     discount += coupon.discount;
+                  }
+               });
+            }
+
+            total += (availableCouponPrice - discount);
+
+            self.result.items.filter((d: any) => d.isChecked).filter((d: any) => !d.product.availableCoupon).forEach((item: any) => {
+               total += (item.product.price * item.quantity);
+            })
+         }
+         return total;
+      },
    }))
    .actions((self) => ({
       getCouponList: flow(function* () {
@@ -49,22 +74,26 @@ export const List = types
          return self.result
       }),
 
-      addToCart: flow(function* (item: any) {
-         const tempArray: any = self.result.items?.slice();
-         const idx = self.result.items?.findIndex(function (t) { return t.id === item.id })!
-         if (idx === -1) {
-            tempArray.push({ id: item.id, title: item.title, coverImage: item.coverImage, price: item.price, count: 1, isChecked: true });
+      addToCart: flow(function* (item) {
+         const tempArray = _.cloneDeep(self.result.items);
+         const idx = self.result.items?.findIndex(function (t: any) {
+            return t.product.id === item.id
+         })
+         if (idx === -1 && tempArray) {
+            tempArray.push({ product: { ...item }, quantity: 1, isChecked: true });
          }
+
          self.result = {
             ...self.result,
             items: tempArray
          }
+
          return self.result
       }),
 
-      removeToCart: flow(function* (item) {
-         const idx = self.result.items?.findIndex(function (t) { return t.id === item.id })!
-         const tempArray = [...self.result.items];
+      removeToCart: flow(function* (id) {
+         const idx = self.result.items?.findIndex(function (t: any) { return t.product.id === id })!
+         const tempArray = _.cloneDeep(self.result.items);
          if (idx > -1) {
             tempArray?.splice(idx, 1)
          }
@@ -78,10 +107,10 @@ export const List = types
       }),
 
       increaseQuantity: flow(function* (item) {
-         const idx = self.result.items?.findIndex(function (t) { return t.id === item.id })!
-         const tempArray = [...self.result.items];
-         if (idx > -1) {
-            tempArray[idx].count++
+         const idx = self.result.items?.findIndex(function (t: any) { return t.product.id === item.product.id })!
+         const tempArray = _.cloneDeep(self.result.items)!;
+         if (idx > -1 && tempArray[idx]) {
+            tempArray[idx].quantity = ++tempArray[idx].quantity!;
          }
 
          self.result = {
@@ -93,10 +122,10 @@ export const List = types
       }),
 
       decreaseQuantity: flow(function* (item) {
-         const idx = self.result.items?.findIndex(function (t) { return t.id === item.id })!
-         const tempArray = [...self.result.items];
-         if (idx > -1 && tempArray[idx].count > 1) {
-            tempArray[idx].count--
+         const idx = self.result.items?.findIndex(function (t: any) { return t.product.id === item.product.id })!
+         const tempArray = _.cloneDeep(self.result.items)!;
+         if (idx > -1 && tempArray[idx].quantity! > 1) {
+            tempArray[idx].quantity = --tempArray[idx].quantity!;
          }
 
          self.result = {
@@ -108,9 +137,9 @@ export const List = types
       }),
 
       toggleToBuyProduct: flow(function* (item) {
-         const idx = self.result.items?.findIndex(function (t) { return t.id === item.id })!
+         const idx = self.result.items?.findIndex(function (t: any) { return t.product.id === item.product.id })!
          const tempArray = [...self.result.items];
-         if (idx > -1 && tempArray[idx].count > 0) {
+         if (idx > -1 && tempArray[idx].quantity! > 0) {
             tempArray[idx].isChecked = !tempArray[idx].isChecked;
          }
 
@@ -136,6 +165,7 @@ export const List = types
 
          return self.result
       }),
+
    }))
    .create({
       result: CartDataInitialState,

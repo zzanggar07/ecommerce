@@ -8,17 +8,20 @@ export const Coupon = types.model({
    isChecked:types.boolean
 })
 
-export const CartItem = types.model({
-   id: types.string,
-   title: types.string,
-   coverImage: types.string,
-   price: types.number,
-   count: types.number,
-   isChecked: types.boolean
-})
+import {
+   Product,
+} from '@resource/product/response/ResData.type'
+
+export const CartEntry = types
+    .model("CartEntry", {
+        quantity: types.optional(types.number, 1),
+        isChecked: types.optional(types.boolean, true),
+        product: Product
+    })
+
 
 export const CartResData = types.model({
-   items: types.array(CartItem),
+   items: types.array(CartEntry),
    coupons:types.array(Coupon),
 })
 
@@ -27,4 +30,4 @@ export const CartDataInitialState = {
    coupons: [],
 }
 
-export type ICart = Instance<typeof CartItem>
+export type ICart = Instance<typeof CartEntry>

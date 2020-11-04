@@ -18,7 +18,7 @@ export default class MainContent extends React.Component<any, {}> {
       const products = this.props.products;
       products.getList().then((r: any) => {
          products.sortByPrice().then((a: any) => {
-            console.log("load product"+a)
+            console.log("load product" + a)
          })
       })
    }
@@ -90,9 +90,8 @@ export default class MainContent extends React.Component<any, {}> {
                      <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <div className="row">
                            {
-
                               this.props.products.result.items.map((item: any) => {
-                                 const idx = cart.result.items?.findIndex(function (t: any) { return t.id === item.id })!
+                                 const hasCartItem = cart.result.items?.findIndex(function (t: any) { return t.product.id === item.id })! > -1
                                  return (
                                     <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6" key={item.id}>
                                        <div className="single-popular-items mb-50 text-center">
@@ -100,11 +99,11 @@ export default class MainContent extends React.Component<any, {}> {
                                              <img src={item.coverImage} alt="" />
                                              <div className="img-cap"
                                                 onClick={(e) => {
-                                                   idx > -1 ?
-                                                      cart.removeToCart(item).then((r: any) => { console.log(r) }) :
+                                                   hasCartItem ?
+                                                      cart.removeToCart(item.id).then((r: any) => { console.log(r) }) :
                                                       cart.addToCart(item).then((r: any) => {
                                                          if (r.items.length > 3) {
-                                                            cart.removeToCart(item).then((a: any) => {
+                                                            cart.removeToCart(item.id).then((a: any) => {
                                                                console.log(a)
                                                             })
                                                             toast.showDanger('장바구니 오류', '장바구니 최대 갯수는 3개입니다.')
@@ -113,10 +112,10 @@ export default class MainContent extends React.Component<any, {}> {
                                                       })
                                                 }}
                                              >
-                                                {idx > -1 ? <span>Remove to cart</span> : <span >Add to cart</span>}
+                                                {hasCartItem ? <span>Remove to cart</span> : <span >Add to cart</span>}
                                              </div>
                                              <div className="favorit-items">
-                                                <span className="flaticon-heart" style={{ color: idx > -1 ? "red" : "black" }} />
+                                                <span className="flaticon-heart" style={{ color: hasCartItem ? "red" : "black" }} />
                                              </div>
                                           </div>
                                           <div className="popular-caption">
@@ -135,7 +134,7 @@ export default class MainContent extends React.Component<any, {}> {
                         <div className="row">
                            {
                               this.props.products.result.items.map((item: any) => {
-                                 const idx = cart.result.items?.findIndex(function (t: any) { return t.id === item.id })!
+                                 const hasCartItem = cart.result.items?.findIndex(function (t: any) { return t.product.id === item.id })! > -1
                                  return (
                                     <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6" key={item.id}>
                                        <div className="single-popular-items mb-50 text-center">
@@ -143,11 +142,11 @@ export default class MainContent extends React.Component<any, {}> {
                                              <img src={item.coverImage} alt="" />
                                              <div className="img-cap"
                                                 onClick={(e) => {
-                                                   idx > -1 ?
-                                                      cart.removeToCart(item).then((r: any) => { console.log(r) }) :
+                                                   hasCartItem ?
+                                                      cart.removeToCart(item.id).then((r: any) => { console.log(r) }) :
                                                       cart.addToCart(item).then((r: any) => {
                                                          if (r.items.length > 3) {
-                                                            cart.removeToCart(item).then((a: any) => {
+                                                            cart.removeToCart(item.id).then((a: any) => {
                                                                console.log(a)
                                                             })
                                                             toast.showDanger('장바구니 오류', '장바구니 최대 갯수는 3개입니다.')
@@ -156,10 +155,10 @@ export default class MainContent extends React.Component<any, {}> {
                                                       })
                                                 }}
                                              >
-                                                {idx > -1 ? <span >Remove to cart</span> : <span >Add to cart</span>}
+                                                {hasCartItem ? <span >Remove to cart</span> : <span >Add to cart</span>}
                                              </div>
                                              <div className="favorit-items">
-                                                <span className="flaticon-heart" style={{ color: idx > -1 ? "red" : "black" }} />
+                                                <span className="flaticon-heart" style={{ color: hasCartItem ? "red" : "black" }} />
                                              </div>
                                           </div>
                                           <div className="popular-caption">

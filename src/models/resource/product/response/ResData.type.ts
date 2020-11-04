@@ -1,7 +1,7 @@
 import { Instance, types } from 'mobx-state-tree'
 
 export const Product = types.model({
-   id: types.string,
+   id: types.identifier,
    title: types.string,
    coverImage: types.string,
    price: types.number,

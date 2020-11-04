@@ -69,15 +69,15 @@ export default class MainContent extends React.Component<any, {}> {
                                           <td>
                                              <div className="media">
                                                 <div className="d-flex">
-                                                   <img src={item.coverImage} alt="" />
+                                                   <img src={item.product.coverImage} alt="" />
                                                 </div>
                                                 <div className="media-body">
-                                                   <p>{item.title}</p>
+                                                   <p>{item.product.title}</p>
                                                 </div>
                                              </div>
                                           </td>
                                           <td>
-                                             <h5>{numberWithComma(item.price)}원</h5>
+                                             <h5>{numberWithComma(item.product.price)}원</h5>
                                           </td>
                                           <td>
                                              <div className="product_count">
@@ -85,7 +85,7 @@ export default class MainContent extends React.Component<any, {}> {
                                                    onClick={(e) => {
                                                       this.props.cart.decreaseQuantity(item).then((r: any) => { console.log(r) })
                                                    }}><i className="ti-minus" /></span>
-                                                <input className="input-number" type="text" defaultValue={item.count} value={item.count} min={1} max={10} />
+                                                <input className="input-number" type="text" defaultValue={item.quantity} value={item.quantity} min={1} max={10} />
                                                 <span className="input-number-increment"
                                                    onClick={(e) => {
                                                       this.props.cart.increaseQuantity(item).then((r: any) => { console.log(r) })
@@ -93,13 +93,13 @@ export default class MainContent extends React.Component<any, {}> {
                                              </div>
                                           </td>
                                           <td>
-                                             <h5>{numberWithComma(item.price * item.count)}원</h5>
+                                             <h5>{numberWithComma(item.product.price * item.quantity)}원</h5>
                                           </td>
                                           <td>
                                              <div className="close_box">
                                                 <button type="button" className="close" data-dismiss="alert" aria-label="Close"
                                                    onClick={(e) => {
-                                                      this.props.cart.removeToCart(item).then((r: any) => { console.log(r) })
+                                                      this.props.cart.removeToCart(item.product.id).then((r: any) => { console.log(r) })
                                                    }}>
                                                    <span aria-hidden="true"><i className="fas fa-times" /></span>
                                                 </button>
@@ -141,10 +141,7 @@ export default class MainContent extends React.Component<any, {}> {
                               </tr>
                               <tr>
                                  <td colSpan={4} style={{ textAlign: "right" }}>
-                                    <h5>총상품 가격:
-                                       {numberWithComma(this.props.cart.subTotal)}원 - 총할인:{this.props.cart.totalDiscount}
-                                       =
-                                       총 주문 가격:{}
+                                    <h5>총 상품 가격: {numberWithComma(this.props.cart.subTotal)}원 - 총 할인: {this.props.cart.totalDiscount}  = 총 주문 가격: {numberWithComma(this.props.cart.total)}원
                                     </h5>
                                  </td>
                                  <td />
