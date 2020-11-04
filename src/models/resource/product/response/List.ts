@@ -1,4 +1,5 @@
 import { flow, types } from 'mobx-state-tree'
+import { isEmpty } from '@utils/Utility'
 import { PRODUCTS } from '@src/Constants'
 import {
    Product,
@@ -20,7 +21,7 @@ export const List = types
                   coverImage: product.coverImage,
                   price: product.price,
                   score: product.score,
-                  availableCoupon: product.availableCoupon ? product.availableCoupon : true
+                  availableCoupon: isEmpty(product.availableCoupon) ? true : product.availableCoupon
                }),
             ),
          }

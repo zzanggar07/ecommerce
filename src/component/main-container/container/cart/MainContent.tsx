@@ -47,6 +47,7 @@ export default class MainContent extends React.Component<any, {}> {
                                  <th scope="col">Price</th>
                                  <th scope="col">Quantity</th>
                                  <th scope="col">Total</th>
+                                 <th scope="col">Coupon</th>
                                  <th scope="col">&nbsp;</th>
                               </tr>
                            </thead>
@@ -96,6 +97,9 @@ export default class MainContent extends React.Component<any, {}> {
                                              <h5>{numberWithComma(item.product.price * item.quantity)}원</h5>
                                           </td>
                                           <td>
+                                             <h5>{item.product.availableCoupon ? "적용가능" : "적용불가"}</h5>
+                                          </td>
+                                          <td>
                                              <div className="close_box">
                                                 <button type="button" className="close" data-dismiss="alert" aria-label="Close"
                                                    onClick={(e) => {
@@ -111,6 +115,7 @@ export default class MainContent extends React.Component<any, {}> {
                               }
 
                               <tr className="coupon_area">
+                                 <td />
                                  <td />
                                  <td />
                                  <td />
@@ -140,11 +145,10 @@ export default class MainContent extends React.Component<any, {}> {
                                  <td />
                               </tr>
                               <tr>
-                                 <td colSpan={4} style={{ textAlign: "right" }}>
-                                    <h5>총 상품 가격: {numberWithComma(this.props.cart.subTotal)}원 - 총 할인: {this.props.cart.totalDiscount}  = 총 주문 가격: {numberWithComma(this.props.cart.total)}원
+                                 <td colSpan={6} style={{ textAlign: "right" }}>
+                                    <h5>총 상품 가격: {numberWithComma(this.props.cart.subTotal)}원 - 총 할인: {this.props.cart.displayDicount}  = 총 주문 가격: {numberWithComma(this.props.cart.total)}원
                                     </h5>
                                  </td>
-                                 <td />
                               </tr>
                            </tbody>
                         </table>

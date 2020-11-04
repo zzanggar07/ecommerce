@@ -21,7 +21,7 @@ export const List = types
       get count() {
          return self.result.items ? self.result.items.length : 0
       },
-      get totalDiscount() {
+      get displayDicount() {
          return self.result.coupons ? self.result.coupons.filter((d: any) => d.isChecked).reduce((p: any, n: any) => {
             const discount = (n.type === COUPON_TYPE_RATE ? n.discount + "%(정액할인)" : n.discount + "원(금액할인)");
             if (p !== "없음") {
