@@ -21,39 +21,54 @@ export const List = types
       get count() {
          return self.result.items ? self.result.items.length : 0
       },
+      get isCouponAvailable() {
+         const checkedProduct = self.result.items?.filter((d: any) => d.isChecked);
+         if (checkedProduct?.length === 0 || checkedProduct?.filter((d: any) => !d.product.availableCoupon).length === checkedProduct?.length) {
+            return false
+         }
+
+         return true;
+      },
       get displayDicount() {
-         return self.result.coupons ? self.result.coupons.filter((d: any) => d.isChecked).reduce((p: any, n: any) => {
+         if (!this.isCouponAvailable) {
+            return "쿠폰사용 불가"
+         }
+
+         return self.result.coupons?.filter((d: any) => d.isChecked).reduce((p: any, n: any) => {
             const discount = (n.type === COUPON_TYPE_RATE ? n.discount + "%(정액할인)" : n.discount + "원(금액할인)");
             if (p !== "없음") {
                return p + ", " + discount;
             }
             return discount;
-         }, "없음") : "쿠폰없음"
+         }, "없음")
       },
       get total() {
          let total = 0;
          let discount = 0;
-         if (self.result.items) {
-            const availableCouponPrice = self.result.items.filter((d: any) => d.isChecked).filter((d: any) => d.product.availableCoupon).reduce((p: any, n: any) => {
-               return p + n.product.price * n.quantity;
-            }, 0)
 
-            if (self.result.coupons) {
-               self.result.coupons.filter((d: any) => d.isChecked).forEach(coupon => {
-                  if (coupon.type === COUPON_TYPE_RATE) {
-                     discount += (availableCouponPrice * coupon.discount / 100);
-                  } else {
-                     discount += coupon.discount;
-                  }
-               });
+         // 쿠폰사용 가능
+         const availableCouponPrice = self.result.items?.filter((d: any) => d.isChecked).filter((d: any) => d.product.availableCoupon).reduce((p: any, n: any) => {
+            return p + n.product.price * n.quantity;
+         }, 0)
+
+
+         self.result.coupons?.filter((d: any) => d.isChecked).forEach(coupon => {
+            if (coupon.type === COUPON_TYPE_RATE) {
+               discount += (availableCouponPrice * coupon.discount / 100);
+            } else {
+               discount += coupon.discount;
             }
+         });
 
+         if (availableCouponPrice > 0) {
             total += (availableCouponPrice - discount);
-
-            self.result.items.filter((d: any) => d.isChecked).filter((d: any) => !d.product.availableCoupon).forEach((item: any) => {
-               total += (item.product.price * item.quantity);
-            })
          }
+
+         // 쿠폰사용 불가
+         self.result.items?.filter((d: any) => d.isChecked).filter((d: any) => !d.product.availableCoupon).forEach((item: any) => {
+            total += (item.product.price * item.quantity);
+         })
+
          return total;
       },
    }))
@@ -138,14 +153,21 @@ export const List = types
 
       toggleToBuyProduct: flow(function* (item) {
          const idx = self.result.items?.findIndex(function (t: any) { return t.product.id === item.product.id })!
-         const tempArray = [...self.result.items];
-         if (idx > -1 && tempArray[idx].quantity! > 0) {
-            tempArray[idx].isChecked = !tempArray[idx].isChecked;
+         const itemsTempArray = [...self.result.items];
+         if (idx > -1 && itemsTempArray[idx].quantity! > 0) {
+            itemsTempArray[idx].isChecked = !itemsTempArray[idx].isChecked;
          }
+
+         // 쿠폰 선택 초기화
+         const couponTempArray = _.cloneDeep(self.result.coupons);
+         couponTempArray?.forEach(function (coupon, index, array) {
+            array[index].isChecked = false;
+         });
 
          self.result = {
             ...self.result,
-            items: tempArray
+            items: itemsTempArray,
+            coupons: couponTempArray,
          }
 
          return self.result
