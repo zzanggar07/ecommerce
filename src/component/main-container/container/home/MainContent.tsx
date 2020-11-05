@@ -2,10 +2,10 @@ import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import SliderArea from '@home/area/Slider'
 import PopularArea from '@home/area/Popular'
-import GalleryArea from '@home/area/Gallery'
-import VideoArea from '@home/area/Gallery'
+// import GalleryArea from '@home/area/Gallery'
+// import VideoArea from '@home/area/Video'
 import NewProductArea from '@home/area/NewProduct'
-import WatchArea from '@home/area/Watch'
+// import WatchArea from '@home/area/Watch'
 import ShopMethodArea from '@home/area/ShopMethod'
 
 @inject((stores: any) => {
@@ -31,10 +31,10 @@ export default class MainContent extends React.Component<any, {}> {
          <main>
             <SliderArea/>
             <NewProductArea/>
-            <GalleryArea/>
+            {/* <GalleryArea/> */}
             <PopularArea/>
-            <VideoArea/>
-            <WatchArea/>
+            {/* <VideoArea/>*/}
+            {/* <WatchArea/> */}
             <ShopMethodArea/>
          </main>
       </React.Fragment>

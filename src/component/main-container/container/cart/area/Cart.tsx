@@ -141,7 +141,6 @@ export default class Cart extends React.Component<any, {}> {
                   </div>
                </div>
             </div></section>
-
       </React.Fragment>
    }
 }

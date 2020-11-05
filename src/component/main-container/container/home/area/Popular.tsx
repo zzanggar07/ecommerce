@@ -1,19 +1,24 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { inject, observer } from 'mobx-react'
+import { numberWithComma } from '@utils/Utility'
+import Toast from '@utils/Toast'
 
 @inject((stores: any) => {
    return {
-      products: stores.shop.product.list,
+      product: stores.shop.product.list,
       cart: stores.cart.list,
    }
 })
 
 @observer
 export default class Popular extends React.Component<any, {}> {
-
+   private toast: Toast
    render() {
+      const { cart, product } = this.props;
+      const { toast } = this;
       return <React.Fragment>
+         <Toast onRef={(ref: Toast) => (this.toast = ref)} />
          <div className="popular-items section-padding30">
             <div className="container">
                {/* Section tittle */}
@@ -27,22 +32,36 @@ export default class Popular extends React.Component<any, {}> {
                </div>
                <div className="row">
                   {
-                     this.props.products.result.items.map((item: any) => {
+                     product.result.items.slice(0, 6).map((item: any) => {
+                        const hasCartItem = cart.result.items?.findIndex(function (t: any) { return t.product.id === item.id })! > -1
                         return (
                            <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6" key={item.id}>
                               <div className="single-popular-items mb-50 text-center">
                                  <div className="popular-img">
-                                    <img src="assets/img/gallery/popular1.png" alt="" />
-                                    <div className="img-cap">
-                                       <span>Add to cart</span>
+                                    <img src={item.coverImage} alt="" />
+                                    <div className="img-cap"
+                                       onClick={(e) => {
+                                          hasCartItem ?
+                                             cart.removeToCart(item.id).then((r: any) => { console.log(r) }) :
+                                             cart.addToCart(item).then((r: any) => {
+                                                if (r.items.length > 3) {
+                                                   cart.removeToCart(item.id).then((a: any) => {
+                                                      console.log(a)
+                                                   })
+                                                   toast.showDanger('장바구니 오류', '장바구니 최대 갯수는 3개입니다.')
+                                                   return
+                                                }
+                                             })
+                                       }}>
+                                       {hasCartItem ? <span>Remove to cart</span> : <span >Add to cart</span>}
                                     </div>
                                     <div className="favorit-items">
-                                       <span className="flaticon-heart" />
+                                       <span className="flaticon-heart" style={{ color: hasCartItem ? "red" : "black" }} />
                                     </div>
                                  </div>
                                  <div className="popular-caption">
-                                    <h3><a href="product_details.html">Thermo Ball Etip Gloves</a></h3>
-                                    <span>$ 45,743</span>
+                                    <h3><a href="product_details.html">{item.title}</a></h3>
+                                    <span>{numberWithComma(item.price)}원</span>
                                  </div>
                               </div>
                            </div>
