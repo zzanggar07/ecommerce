@@ -1,6 +1,6 @@
 {
  "compilerOptions": {
-        "baseUrl": "../ecommerce2",
+        "baseUrl": "../ecommerce",
         "paths": {
             "@src/*": ["src/*"],
             "@component/*": ["src/component/*"],
