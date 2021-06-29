@@ -586,3 +586,5 @@ export const ERROR_PROPS = new Map()
 
     export const SORT_BY_PRICE = 1
     export const SORT_BY_SCORE = 2
+
+    export const api = "https://api.admin.pikkle.me"
